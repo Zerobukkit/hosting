@@ -28,7 +28,7 @@ html, body {
    WELCOME SCREEN — Cherry Blossom
 ═══════════════════════════════════════════════════════ */
 #welcome-screen {
-  background: url('uploads/_maplestory_background__the_scent_of_blossom_by_bboki_da69811-fullview-33ae3b28.jpg') no-repeat center center / cover;
+  background: url('uploads/landingBG.jpg') no-repeat center center / cover;
   align-items: center;
   justify-content: center;
   overflow: hidden;
