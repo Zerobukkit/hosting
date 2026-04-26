@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en"><head>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body data-cc-id="cc-1" style="cursor: crosshair; background-color: rgb(208, 97, 163);">
+
+  <!-- ══════════════════════════════════════ -->
+  <!--              WELCOME SCREEN           -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="welcome-screen" style="display: flex;">
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- Cherry blossom trees (CSS) -->
+    <div class="blossom-tree tree-left"></div>
+    <div class="blossom-tree tree-right"></div>
+
+    <!-- Ground strip -->
+    <div id="welcome-ground"></div>
+
+    <div id="welcome-layout">
+      <div id="welcome-npc-side">
+        <img src="uploads/ShopNPC.png" alt="Shop NPC" id="welcome-npc-img">
+      </div>
+
+      <div id="welcome-panel">
+        <div id="welcome-title-box">
+          <div id="welcome-subtitle">✦ WELCOME TO ✦</div>
+          <div id="welcome-title">THE SHOP</div>
+        </div>
+
+        <div id="welcome-menu">
+          <div class="menu-item" data-action="game">
+            <span class="menu-arrow">▶</span>
+            <span class="menu-label">PLAY GAME</span>
+          </div>
+          <div class="menu-item active" data-action="shop">
+            <span class="menu-arrow">▶</span>
+            <span class="menu-label">BROWSE SHOP</span>
+          </div>
+          <div class="menu-item" data-action="about">
+            <span class="menu-arrow">▶</span>
+            <span class="menu-label">ABOUT US</span>
+          </div>
+        </div>
+
+        <div id="welcome-hint">[ ↑↓ NAVIGATE ] [ ENTER / CLICK SELECT ]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--               GAME SCREEN             -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="game-screen" style="display: none;">
+
+    <!-- ── Bookshop Room Layers ── -->
+    <div id="room-ceiling"></div>
+    <div id="room-backwall">
+      <div class="bookshelf" id="shelf-l"></div>
+      <div class="bookshelf" id="shelf-m"></div>
+      <div class="bookshelf" id="shelf-r"></div>
+      <div id="room-lamp-l" class="room-lamp"></div>
+      <div id="room-lamp-r" class="room-lamp"></div>
+    </div>
+    <div id="room-midwall"></div>
+    <div id="room-floor"></div>
+
+    <!-- ── Platforms (scattered, non-uniform) ── -->
+    <!-- NPCs will stand on these -->
+    <div class="game-platform" id="plat-ul"></div>  <!-- upper-left  -->
+    <div class="game-platform" id="plat-ur"></div>  <!-- upper-right -->
+    <div class="game-platform" id="plat-ml"></div>  <!-- mid-left    -->
+    <div class="game-platform" id="plat-mr"></div>  <!-- mid-right   -->
+
+    <!-- ── Player ── -->
+    <div id="player">
+      <div class="player-sprite"></div>
+      <div class="player-shadow"></div>
+    </div>
+
+    <!-- ── NPC Stations ── -->
+    <!-- FAQ — green outline in mockup: upper-left, on the bookshelf -->
+    <div class="npc-station" id="faq-npc">
+      <img src="uploads/FAQNPC.png" class="npc-sprite" alt="FAQ">
+      <div class="npc-nameplate">FAQ</div>
+      <div class="interact-hint">[ E ]</div>
+    </div>
+    <!-- SHOP — blue outline in mockup: middle-right, on the purple table -->
+    <div class="npc-station" id="shop-npc">
+      <img src="uploads/ShopNPC.png" class="npc-sprite" alt="Shop">
+      <div class="npc-nameplate">SHOP</div>
+      <div class="interact-hint">[ E ]</div>
+    </div>
+    <!-- ABOUT — red outline in mockup: bottom-left, on stone floor -->
+    <div class="npc-station" id="about-npc">
+      <img src="uploads/AboutNPC.png" class="npc-sprite" alt="About">
+      <div class="npc-nameplate">ABOUT</div>
+      <div class="interact-hint">[ E ]</div>
+    </div>
+    <!-- CART — last white box in mockup: bottom-right, on stone floor -->
+    <div class="npc-station" id="cart-npc">
+      <img src="uploads/CartNPC.png" class="npc-sprite" alt="Cart">
+      <div class="npc-nameplate">CART</div>
+      <div class="interact-hint">[ E ]</div>
+    </div>
+
+    <!-- ── HUD ── -->
+    <div id="game-hud">
+      <button id="hud-back-btn">◀ MENU</button>
+      <div id="hud-hint">WASD · Arrow Keys to move · E to talk · ESC to close</div>
+    </div>
+    <div id="proximity-tip">Press <strong>E</strong> to talk</div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--             WEBSITE SCREEN            -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="website-screen" style="display: none;">
+    <div id="web-header">
+      <div id="web-header-left">
+        <button id="web-back-btn">◀ MENU</button>
+      </div>
+      <nav id="web-nav">
+        <button class="web-tab active" data-tab="shop">SHOP</button>
+        <button class="web-tab" data-tab="about">ABOUT</button>
+        <button class="web-tab" data-tab="faq">FAQ</button>
+      </nav>
+      <div id="web-header-right">
+        <button id="web-cart-icon-btn">🛒 <span id="web-cart-count">0</span></button>
+      </div>
+    </div>
+
+    <div id="web-body">
+      <!-- SHOP TAB — 3 column -->
+      <div class="web-content active" id="tab-shop">
+        <div id="web-shop-layout">
+          <!-- LEFT: Ornate item grid panel -->
+          <div id="web-shop-panel">
+            <div id="web-shop-panel-header">
+              <img src="uploads/ShopNPC.png" alt="" id="web-shop-panel-icon" />
+              <span>THE SHOP</span>
+            </div>
+            <div id="shop-items-grid"></div>
+          </div>
+          <!-- CENTRE: Large item preview -->
+          <div id="web-preview-area">
+            <div id="web-preview-empty">
+              <div class="wp-icon">🛍</div>
+              <div class="wp-hint">SELECT AN ITEM TO PREVIEW</div>
+            </div>
+            <img id="web-preview-img" alt="Item Preview" />
+          </div>
+          <!-- RIGHT: Item details + controls -->
+          <div id="web-detail-panel">
+            <div id="web-detail-empty-msg">← Select an item</div>
+            <div id="web-detail-content">
+              <div id="web-detail-name"></div>
+              <div id="web-detail-desc"></div>
+              <div class="web-detail-sep"></div>
+              <div class="sidebar-label">SIZE</div>
+              <div id="size-buttons">
+                <button class="size-btn" data-size="XS">XS</button>
+                <button class="size-btn" data-size="S">S</button>
+                <button class="size-btn" data-size="M">M</button>
+                <button class="size-btn" data-size="L">L</button>
+                <button class="size-btn" data-size="XL">XL</button>
+              </div>
+              <div class="sidebar-label" style="margin-top:10px">QTY</div>
+              <div id="qty-controls">
+                <button class="qty-btn" id="web-qty-minus">−</button>
+                <span id="web-qty-value">1</span>
+                <button class="qty-btn" id="web-qty-plus">+</button>
+              </div>
+              <button id="web-add-cart-btn">ADD TO CART</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CART TAB -->
+      <div class="web-content" id="tab-cart">
+        <div id="cart-content"></div>
+      </div>
+
+      <!-- ABOUT TAB -->
+      <div class="web-content" id="tab-about">
+        <div id="about-content">
+          <div class="about-npc-row">
+            <img src="uploads/AboutNPC.png" alt="About NPC" class="about-npc">
+            <div class="about-bubble">
+              <p>Welcome, traveler!</p>
+              <p>We are <strong>The Shop</strong> — a small brand crafting quality goods for adventurers like yourself. Every item is made with care and a little bit of magic.</p>
+              <p>Our story began in a small village market and grew into something we're truly proud of. Thank you for stopping by!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ TAB -->
+      <div class="web-content" id="tab-faq">
+        <div id="faq-content">
+          <div class="faq-npc-row">
+            <img src="uploads/FAQNPC.png" alt="FAQ NPC" class="faq-npc">
+          </div>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>How long does shipping take?</summary>
+              <p>Typically 3–7 business days within the realm. Expedited shipping available at checkout.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Can I return or exchange an item?</summary>
+              <p>Yes! Returns accepted within 30 days of purchase. Items must be in original condition.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How do I know what size to pick?</summary>
+              <p>Check the sizing chart in the shop. When in doubt, size up — our items run slightly small.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Do you ship internationally?</summary>
+              <p>Yes, we ship to most regions. Delivery times and fees vary by destination.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--           DIALOGUE BOX (BOTTOM)       -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="dialogue-overlay">
+    <div id="dialogue-box">
+      <!-- NPC portrait: absolutely positioned, left side, overflows above box -->
+      <div id="dialogue-npc-portrait">
+        <img id="dialogue-npc-img" alt="NPC">
+        <div id="dialogue-npc-name">NPC</div>
+      </div>
+      <!-- Text area: offset right to clear the portrait -->
+      <div id="dialogue-inner">
+        <div id="dialogue-text"></div>
+        <div id="dialogue-buttons"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--                 POPUP                 -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="popup"></div>
+
+  <script type="module" src="main.js"></script>
+
+
+</body></html>

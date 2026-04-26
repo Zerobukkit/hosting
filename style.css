@@ -1,0 +1,1210 @@
+/* ═══════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #fce8f4;
+  font-family: 'VT323', monospace;
+  color: #3c1a28;
+  image-rendering: pixelated;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCREEN MANAGER
+═══════════════════════════════════════════════════════ */
+#welcome-screen,
+#game-screen,
+#website-screen {
+  position: fixed;
+  inset: 0;
+  display: none;
+}
+#welcome-screen { display: flex; }
+
+/* ═══════════════════════════════════════════════════════
+   WELCOME SCREEN — Cherry Blossom
+═══════════════════════════════════════════════════════ */
+#welcome-screen {
+  background: url('uploads/_maplestory_background__the_scent_of_blossom_by_bboki_da69811-fullview-33ae3b28.jpg') no-repeat center center / cover;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#petal-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* Ground and trees hidden — background image provides scenery */
+#welcome-ground { display: none; }
+.blossom-tree   { display: none; }
+
+/* Welcome layout */
+#welcome-layout {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  gap: 48px;
+  margin-bottom: 60px;
+}
+
+#welcome-npc-side {
+  flex-shrink: 0;
+  animation: npcFloat 3s ease-in-out infinite;
+}
+#welcome-npc-img {
+  width: 150px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 16px rgba(200,80,120,0.25));
+}
+@keyframes npcFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Title box */
+#welcome-title-box { text-align: left; margin-bottom: 4px; }
+#welcome-subtitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.52rem;
+  color: rgb(255, 255, 255);
+  letter-spacing: 0.18em;
+  margin-bottom: 8px;
+}
+#welcome-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 2.6rem;
+  color: #e03870;
+  text-shadow:
+    3px 3px 0 #fff,
+    5px 5px 0 rgba(220,60,110,0.3),
+    0 0 40px rgba(240,80,140,0.25);
+  line-height: 1.1;
+}
+
+/* RPG menu panel */
+#welcome-menu {
+  background: rgba(255, 248, 252, 0.97);
+  border: 3px solid #f090b8;
+  border-radius: 6px;
+  padding: 22px 30px;
+  box-shadow:
+    0 0 0 1px rgba(240,144,184,0.25),
+    inset 0 0 20px rgba(255,200,220,0.3),
+    0 8px 28px rgba(0,0,0,0.35);
+  min-width: 310px;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.72rem;
+  color: #b06080;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(240,144,184,0.2);
+  transition: color 0.1s;
+  user-select: none;
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item:hover { color: #e03870; }
+.menu-arrow { color: transparent; font-size: 0.65rem; flex-shrink: 0; transition: color 0.1s; }
+.menu-item.active { color: #e03870; }
+.menu-item.active .menu-arrow {
+  color: #e03870;
+  text-shadow: 0 0 8px rgba(224,56,112,0.5);
+  animation: arrowPulse 0.8s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.35; }
+}
+
+#welcome-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GAME SCREEN — Bookshop image background
+═══════════════════════════════════════════════════════ */
+#game-screen {
+  overflow: hidden;
+  background:
+    url('uploads/image-524209b2-bc12-486e-949c-669e62abac61.png')
+    no-repeat center 55% / cover;
+}
+
+/* Hide CSS room layers — image provides the scene */
+#room-ceiling, #room-backwall, #room-midwall, #room-floor,
+#room-lamp-l, #room-lamp-r, .bookshelf, #game-floor,
+.game-platform { display: none; }
+
+/* ── Player (green slime) ── */
+#player {
+  position: absolute;
+  width: 50px; height: 56px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+.player-sprite {
+  width: 46px;
+  height: 42px;
+  position: relative;
+  /* Teardrop body — wider at bottom, pointed at top */
+  background: radial-gradient(ellipse at 32% 28%, #f0ffc8 0%, #8fe660 28%, #3aaf28 65%, #1a7c10 100%);
+  border-radius: 50% 50% 48% 48% / 70% 70% 38% 38%;
+  box-shadow:
+    inset -4px -6px 10px rgba(0,40,0,0.45),
+    0 3px 6px rgba(0,0,0,0.35);
+  transform-origin: 50% 100%;
+  animation: idleBob 1.4s ease-in-out infinite;
+}
+/* Yellow "+" eyes */
+.player-sprite::before,
+.player-sprite::after {
+  content: '+';
+  position: absolute;
+  top: 38%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  color: #f8c424;
+  text-shadow: 0 1px 0 #8a5800;
+  line-height: 1;
+}
+.player-sprite::before { left: 22%; }
+.player-sprite::after  { right: 22%; }
+
+.player-shadow {
+  width: 34px; height: 8px;
+  background: rgba(0,0,0,0.32);
+  border-radius: 50%;
+  margin-top: 2px;
+  animation: shadowBob 1.4s ease-in-out infinite;
+}
+
+#player.near-npc .player-sprite {
+  filter: drop-shadow(0 0 10px rgba(255,240,120,0.85));
+}
+
+#player.moving .player-sprite { animation: walkBob 0.36s ease-in-out infinite; }
+#player.moving .player-shadow { animation: walkShadow 0.36s ease-in-out infinite; }
+
+/* Idle: bouncing in place with a squash-and-stretch landing */
+@keyframes idleBob {
+  0%   { transform: translateY(0)     scaleX(1)    scaleY(1); }
+  35%  { transform: translateY(-14px) scaleX(0.92) scaleY(1.1); }
+  55%  { transform: translateY(0)     scaleX(1.15) scaleY(0.78); }
+  70%  { transform: translateY(0)     scaleX(0.98) scaleY(1.04); }
+  100% { transform: translateY(0)     scaleX(1)    scaleY(1); }
+}
+@keyframes shadowBob {
+  0%, 100% { transform: scaleX(1);   opacity: 0.32; }
+  35%      { transform: scaleX(0.6); opacity: 0.18; }
+  55%      { transform: scaleX(1.15);opacity: 0.4; }
+}
+/* Walking: faster smaller hops */
+@keyframes walkBob {
+  0%, 100% { transform: translateY(0)    scaleX(1)    scaleY(1); }
+  40%      { transform: translateY(-6px) scaleX(0.95) scaleY(1.06); }
+  80%      { transform: translateY(0)    scaleX(1.06) scaleY(0.92); }
+}
+@keyframes walkShadow {
+  0%, 100% { transform: scaleX(1);   opacity: 0.3; }
+  40%      { transform: scaleX(0.78);opacity: 0.22; }
+  80%      { transform: scaleX(1.08);opacity: 0.36; }
+}
+
+/* ── NPC Stations ──
+   All NPC sprites share a fixed height to match the purple table.
+   width:auto on the sprite preserves the source aspect ratio. */
+.npc-station {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 6;
+  /* No transform — positioned by foot-level top values in utils.js */
+}
+.npc-sprite {
+  height: 140px;
+  width: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+  transition: transform 0.2s;
+}
+.npc-station:hover .npc-sprite { transform: translateY(-5px); }
+.npc-nameplate {
+  background: #fff4f8;
+  border: 2px solid #f090b8;
+  color: #c04878;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-top: 2px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(200,80,120,0.2);
+}
+.interact-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.35rem;
+  color: #f0d060;
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 2px;
+  margin-top: 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.npc-station.in-range .interact-hint { opacity: 1; }
+.npc-station.in-range .npc-sprite {
+  filter: drop-shadow(0 0 10px rgba(240,208,80,0.8));
+}
+
+/* ── HUD ── */
+#game-hud {
+  position: fixed;
+  top: 14px; left: 14px; right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  pointer-events: none;
+}
+#hud-back-btn {
+  pointer-events: all;
+  background: rgba(255,248,252,0.92);
+  border: 2px solid #f090b8;
+  color: #c04878;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.48rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(200,80,120,0.15);
+  transition: background 0.15s, color 0.15s;
+}
+#hud-back-btn:hover { background: #fce8f4; color: #e03870; }
+#hud-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.36rem;
+  color: rgba(255,248,252,0.65);
+  background: rgba(40,16,8,0.65);
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,200,220,0.15);
+}
+#proximity-tip {
+  position: fixed;
+  bottom: 175px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,248,252,0.95);
+  border: 2px solid #f090b8;
+  color: #e03870;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.48rem;
+  padding: 8px 18px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(200,80,120,0.2);
+}
+#proximity-tip.visible { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════
+   DIALOGUE BOX — Maplestory style, bottom centre
+   NPC portrait: left side, large, overflows above box
+═══════════════════════════════════════════════════════ */
+#dialogue-overlay {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 84%; max-width: 960px;
+  display: none;
+  z-index: 200;
+}
+#dialogue-overlay.show { display: block; }
+
+#dialogue-box {
+  position: relative;
+  overflow: visible;
+  background: rgba(18, 6, 14, 0.90);
+  border: 3px solid #c060a0;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  min-height: 138px;
+  display: flex;
+  pointer-events: all;
+  box-shadow:
+    0 -6px 30px rgba(180,60,120,0.18),
+    inset 0 0 40px rgba(80,0,40,0.3);
+}
+
+/* ── NPC portrait: anchored to box bottom, overflows above ── */
+#dialogue-npc-portrait {
+  position: absolute;
+  left: 18px;
+  bottom: 0;
+  width: 165px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 3;
+}
+#dialogue-npc-img {
+  display: block;
+  width: 165px;
+  /* NPC sprite is typically taller than the box — intentional overflow */
+  max-height: 240px;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 0 12px rgba(0,0,0,0.65));
+  animation: npcBob 2.4s ease-in-out infinite;
+}
+@keyframes npcBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Name tag — pill at bottom of portrait, sits at screen edge */
+#dialogue-npc-name {
+  background: linear-gradient(135deg, #38a0f0, #1868c8);
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.46rem;
+  padding: 7px 20px;
+  border-radius: 20px;
+  border: 2px solid #0e48a8;
+  white-space: nowrap;
+  box-shadow: 0 3px 12px rgba(20,80,200,0.5);
+  margin-top: -4px;
+}
+
+/* ── Text area: padded left to clear portrait ── */
+#dialogue-inner {
+  flex: 1;
+  padding: 18px 26px 16px 205px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#dialogue-text {
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  color: #f0e8f4;
+  line-height: 1.5;
+  min-height: 60px;
+  cursor: pointer;
+}
+#dialogue-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dlg-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.48rem;
+  padding: 8px 18px;
+  border: 2px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.dlg-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.dlg-btn:active { transform: translateY(0); }
+.dlg-btn-next { background: #60c868; border-color: #38903a; color: #fff; }
+.dlg-btn-end  { background: #e85858; border-color: #a02828; color: #fff; }
+.dlg-btn-yes  { background: #5898e8; border-color: #2860a8; color: #fff; }
+.dlg-btn-no   { background: #e85858; border-color: #a02828; color: #fff; }
+
+/* ═══════════════════════════════════════════════════════
+   POPUP
+═══════════════════════════════════════════════════════ */
+#popup {
+  display: none;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 780px; max-width: 96vw;
+  height: 600px; max-height: 90vh;
+  background: #fff8fc;
+  border: 3px solid #f090b8;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(240,144,184,0.25),
+    0 16px 50px rgba(200,80,120,0.2),
+    inset 0 0 40px rgba(255,220,235,0.2);
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  flex-direction: column;
+  overflow: hidden;
+}
+#popup.show { display: flex; opacity: 1; }
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: linear-gradient(to right, rgba(240,144,184,0.15), rgba(240,144,184,0.03));
+  border-bottom: 2px solid rgba(240,144,184,0.3);
+  flex-shrink: 0;
+}
+.popup-header-left { display: flex; align-items: center; gap: 10px; }
+.popup-npc-frame {
+  width: 48px; height: 48px;
+  border: 2px solid #f090b8;
+  border-radius: 4px;
+  background: #fce8f4;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.popup-npc-frame img { width: 44px; image-rendering: pixelated; }
+.popup-header-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: #e03870;
+}
+.popup-header-right { display: flex; align-items: center; gap: 10px; }
+.popup-exit-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.46rem;
+  background: #e85858;
+  border: 2px solid #a02828;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.popup-exit-btn:hover { background: #f06060; }
+.popup-cart-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.46rem;
+  background: #58b860;
+  border: 2px solid #2a7830;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.popup-cart-btn:hover { background: #6ed876; }
+
+.popup-body { flex: 1; display: flex; overflow: hidden; }
+
+/* Shop panels */
+.shop-left-panel {
+  width: 55%;
+  border-right: 2px solid rgba(240,144,184,0.25);
+  display: flex; flex-direction: column;
+}
+.shop-item-list {
+  flex: 1; overflow-y: auto; padding: 10px;
+  scrollbar-width: thin; scrollbar-color: #f090b8 transparent;
+}
+.shop-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border: 2px solid rgba(240,144,184,0.2);
+  border-radius: 5px; margin-bottom: 6px;
+  cursor: pointer;
+  background: #fff4f8;
+  transition: background 0.12s, border-color 0.12s;
+}
+.shop-item:hover { background: #fce8f4; border-color: #f090b8; }
+.shop-item.selected { background: #fce0ee; border-color: #e03870; }
+.shop-item-img {
+  width: 40px; height: 40px;
+  border: 1px solid rgba(240,144,184,0.3);
+  border-radius: 4px;
+  background: repeating-linear-gradient(45deg,
+    #fce8f4, #fce8f4 4px, #fff4f8 4px, #fff4f8 8px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.4rem; color: #d06090; flex-shrink: 0;
+}
+.shop-item-name { font-family: 'VT323', monospace; font-size: 1.2rem; color: #3c1a28; }
+.shop-right-panel {
+  width: 45%; display: flex; flex-direction: column;
+}
+.shop-info-section {
+  flex: 1; padding: 12px;
+  border-bottom: 2px solid rgba(240,144,184,0.2);
+  overflow-y: auto;
+}
+.shop-info-section h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.52rem; color: #e03870; margin-bottom: 8px;
+}
+.shop-info-section p {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem; color: #6a3a50; line-height: 1.4;
+}
+.shop-control-section { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.ctrl-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.4rem; color: #b06080; margin-bottom: 4px;
+}
+.size-buttons-row { display: flex; gap: 5px; }
+.size-btn-popup {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem; padding: 5px 7px;
+  background: #fff4f8; border: 2px solid rgba(240,144,184,0.4);
+  color: #b06080; border-radius: 3px; cursor: pointer;
+  transition: all 0.1s;
+}
+.size-btn-popup:hover { border-color: #f090b8; color: #e03870; }
+.size-btn-popup.active { background: #fce0ee; border-color: #e03870; color: #e03870; }
+.qty-row { display: flex; align-items: center; justify-content: space-between; }
+.qty-controls-popup { display: flex; align-items: center; gap: 8px; }
+.qty-btn-popup {
+  width: 28px; height: 28px;
+  background: #fff4f8; border: 2px solid rgba(240,144,184,0.4);
+  color: #3c1a28; font-size: 1.2rem; border-radius: 3px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.12s;
+}
+.qty-btn-popup:hover { border-color: #f090b8; }
+.qty-val-popup {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem; color: #e03870;
+  min-width: 24px; text-align: center;
+}
+.add-cart-popup-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.46rem;
+  background: #58b860; border: 2px solid #2a7830;
+  color: #fff; padding: 8px 14px; border-radius: 4px;
+  cursor: pointer; transition: background 0.15s; align-self: flex-end;
+}
+.add-cart-popup-btn:hover { background: #6ed876; }
+.add-cart-popup-btn.glow { animation: glowPink 1.4s ease-in-out infinite; }
+@keyframes glowPink {
+  0%, 100% { box-shadow: 0 0 6px rgba(240,144,184,0.5); }
+  50%       { box-shadow: 0 0 18px rgba(240,144,184,0.9); }
+}
+
+/* Cart popup */
+.cart-body {
+  flex: 1; padding: 16px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #f090b8 transparent;
+}
+.cart-empty {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; font-family: 'VT323', monospace;
+  font-size: 1.4rem; color: #c898b0;
+}
+.cart-item-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 10px 12px;
+  border: 2px solid rgba(240,144,184,0.2);
+  border-radius: 5px; margin-bottom: 8px; background: #fff4f8;
+}
+.cart-item-info { font-family: 'VT323', monospace; font-size: 1.2rem; color: #3c1a28; flex: 1; }
+.cart-item-info strong { color: #e03870; }
+.cart-item-qty { display: flex; align-items: center; gap: 6px; }
+.cart-qty-btn {
+  width: 24px; height: 24px;
+  background: #fff4f8; border: 2px solid rgba(240,144,184,0.35);
+  color: #3c1a28; border-radius: 3px; cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+}
+.cart-qty-val {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem; color: #e03870;
+  min-width: 20px; text-align: center;
+}
+.cart-remove-btn {
+  background: none; border: none; color: #e85858;
+  font-size: 1.2rem; cursor: pointer; padding: 4px;
+  opacity: 0.65; transition: opacity 0.15s;
+}
+.cart-remove-btn:hover { opacity: 1; }
+.cart-summary {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem; color: #b06080;
+  text-align: right; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(240,144,184,0.2);
+}
+.generic-body {
+  flex: 1; padding: 20px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem; color: #6a3a50; line-height: 1.6; overflow-y: auto;
+}
+
+/* ── Shop popup — left image / right (items, info, controls) ── */
+.shop-split {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.shop-img-pane {
+  width: 50%;
+  padding: 14px;
+  border-right: 1px solid rgba(240,144,184,0.25);
+  display: flex;
+  flex-direction: column;
+}
+.shop-right-stack {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.shop-sec {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(240,144,184,0.2);
+  overflow: hidden;
+}
+.shop-sec:last-child { border-bottom: none; }
+.shop-sec-items    { flex: 2.4 1 0; min-height: 0; }
+.shop-sec-info     { flex: 1.1 1 0; min-height: 0; }
+.shop-sec-controls { flex: 0 0 auto; }
+
+.sq-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.42rem;
+  color: #b06080;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+/* Item image (left pane) */
+.sq-img-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,244,248,0.6);
+  border: 2px solid rgba(240,144,184,0.25);
+  border-radius: 6px;
+  overflow: hidden;
+  min-height: 0;
+}
+.sq-item-img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+}
+.sq-no-item {
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+  color: #c898b0;
+  text-align: center;
+  padding: 14px;
+}
+
+/* Item list */
+.shop-sec-items .shop-item-list {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin; scrollbar-color: #f090b8 transparent;
+}
+
+/* Item info */
+.sq-desc-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  color: #e03870;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.sq-desc-text {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: #6a3a50;
+  line-height: 1.45;
+  overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #f090b8 transparent;
+}
+
+/* Controls */
+.shop-sec-controls { padding-top: 10px; padding-bottom: 12px; }
+.sq-controls { display: flex; flex-direction: column; gap: 8px; }
+.sq-size-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.sq-qty-row  { display: flex; align-items: center; gap: 6px; }
+.sq-qty-val  {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.78rem; color: #e03870;
+  min-width: 28px; text-align: center;
+}
+.qty-add-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.qty-block { flex-shrink: 0; }
+
+/* Larger size/qty/add buttons */
+.size-btn-popup {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 9px 11px;
+  min-width: 36px;
+  background: #fff4f8;
+  border: 2px solid rgba(240,144,184,0.4);
+  color: #b06080;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.size-btn-popup:hover { border-color: #f090b8; color: #e03870; }
+.size-btn-popup.active {
+  background: #fce0ee;
+  border-color: #e03870;
+  color: #e03870;
+}
+.qty-btn-popup {
+  width: 36px; height: 36px;
+  background: #fff4f8;
+  border: 2px solid rgba(240,144,184,0.4);
+  color: #3c1a28;
+  font-size: 1.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.12s;
+}
+.qty-btn-popup:hover { border-color: #f090b8; }
+.add-cart-popup-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.58rem;
+  background: #58b860;
+  border: 2px solid #2a7830;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex: 1;
+  min-height: 46px;
+}
+.add-cart-popup-btn:hover { background: #6ed876; }
+.add-cart-popup-btn.glow { animation: glowPink 1.4s ease-in-out infinite; }
+.ctrl-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.42rem;
+  color: #b06080;
+  margin-bottom: 6px;
+}
+
+/* Float text animation */
+@keyframes floatUp {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -220%) scale(1.1); opacity: 0; }
+}
+.float-text {
+  position: fixed;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.58rem;
+  text-shadow: 0 0 8px rgba(255,255,255,0.7);
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+  z-index: 9999; white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WEBSITE SCREEN
+═══════════════════════════════════════════════════════ */
+#website-screen {
+  background:
+    linear-gradient(rgba(255,242,250,0.84), rgba(255,242,250,0.84)),
+    url('uploads/_maplestory_background__the_scent_of_blossom_by_bboki_da69811-fullview-33ae3b28.jpg')
+    no-repeat center / cover;
+  flex-direction: column;
+}
+#website-screen.active-screen { display: flex; }
+
+/* ── Header ── */
+#web-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(255,248,252,0.94);
+  border-bottom: 2px solid rgba(240,144,184,0.3);
+  box-shadow: 0 2px 14px rgba(200,80,120,0.1);
+}
+#web-header-left { width: 130px; }
+#web-header-right { width: 130px; display: flex; justify-content: flex-end; }
+
+/* Cart icon button */
+#web-cart-icon-btn {
+  font-family: 'VT323', monospace;
+  font-size: 1.4rem;
+  background: transparent;
+  border: none;
+  color: #c04878;
+  padding: 4px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  line-height: 1;
+}
+#web-cart-icon-btn:hover { transform: scale(1.1); }
+#web-cart-count {
+  background: #e03870;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px; height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.4rem;
+  position: absolute;
+  top: -2px; right: -6px;
+  border: 2px solid #fff8fc;
+}
+
+/* Pill nav */
+#web-nav {
+  display: flex;
+  gap: 2px;
+  background: rgba(255,240,248,0.9);
+  border: 2px solid rgba(240,144,184,0.3);
+  border-radius: 30px;
+  padding: 4px 6px;
+}
+.web-tab {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.44rem;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  color: #b06080;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.web-tab:hover { color: #e03870; background: rgba(240,144,184,0.1); }
+.web-tab.active { background: #e03870; color: #fff; }
+#web-back-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.46rem;
+  background: #fff4f8;
+  border: 2px solid rgba(240,144,184,0.4);
+  color: #c04878;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#web-back-btn:hover { border-color: #e85858; color: #e85858; }
+
+#web-body { flex: 1; overflow: hidden; position: relative; }
+.web-content {
+  display: none; position: absolute; inset: 0;
+  overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: #f090b8 transparent;
+}
+.web-content.active { display: flex; flex-direction: column; }
+
+/* ── Web Shop 3-column layout ── */
+#tab-shop { overflow: hidden; }
+#web-shop-layout {
+  display: flex;
+  flex: 1;
+  padding: 16px;
+  gap: 16px;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* LEFT panel — ornate box */
+#web-shop-panel {
+  width: 270px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,250,240,0.97);
+  border: 3px solid #c8900a;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(200,144,10,0.2),
+    inset 0 0 20px rgba(255,220,120,0.08),
+    0 8px 24px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+#web-shop-panel-header {
+  background: linear-gradient(to right, #c8900a, #f0c030, #c8900a);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: #3a1a00;
+  border-bottom: 2px solid #8a5000;
+  flex-shrink: 0;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+#web-shop-panel-icon { width: 32px; image-rendering: pixelated; }
+
+#shop-items-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  align-content: start;
+  scrollbar-width: thin;
+  scrollbar-color: #c8900a transparent;
+}
+.web-shop-item {
+  aspect-ratio: 1;
+  background: rgba(255,248,232,0.9);
+  border: 2px solid rgba(200,136,10,0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.12s;
+  position: relative;
+}
+.web-shop-item:hover { border-color: #c8900a; transform: scale(1.06); z-index: 1; }
+.web-shop-item.selected { border-color: #e03870; outline: 2px solid rgba(224,56,112,0.5); }
+.web-item-thumb {
+  width: 100%; flex: 1;
+  object-fit: cover;
+}
+.web-item-num {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.28rem;
+  color: #8a5000;
+  padding: 2px;
+  text-align: center;
+  background: rgba(255,240,200,0.8);
+  width: 100%;
+}
+
+/* CENTRE panel — item preview */
+#web-preview-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,248,252,0.6);
+  border: 2px solid rgba(240,144,184,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+#web-preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+}
+.wp-icon { font-size: 4rem; opacity: 0.3; }
+.wp-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  color: rgba(180,100,130,0.45);
+  text-align: center;
+  line-height: 1.6;
+}
+#web-preview-img {
+  display: none;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 24px;
+}
+
+/* RIGHT panel — detail + controls */
+#web-detail-panel {
+  width: 250px;
+  flex-shrink: 0;
+  background: rgba(255,248,252,0.97);
+  border: 2px solid rgba(240,144,184,0.35);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #f090b8 transparent;
+}
+#web-detail-empty-msg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: #c898b0;
+  text-align: center;
+}
+#web-detail-content { display: none; flex-direction: column; gap: 10px; }
+#web-detail-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: #e03870;
+  line-height: 1.5;
+}
+#web-detail-desc {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: #6a3a50;
+  line-height: 1.4;
+}
+.web-detail-sep {
+  height: 1px;
+  background: rgba(240,144,184,0.3);
+  margin: 2px 0;
+}
+
+/* Shared size/qty/add-to-cart used by both web and popup */
+#size-buttons, .size-buttons-web { display: flex; gap: 4px; flex-wrap: wrap; }
+.size-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 0.36rem;
+  padding: 5px 7px; background: #fff4f8;
+  border: 2px solid rgba(240,144,184,0.35);
+  color: #b06080; border-radius: 3px; cursor: pointer; transition: all 0.1s;
+}
+.size-btn:hover { border-color: #f090b8; color: #e03870; }
+.size-btn.active { background: #fce0ee; border-color: #e03870; color: #e03870; }
+#qty-controls { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 28px; height: 28px;
+  background: #fff4f8; border: 2px solid rgba(240,144,184,0.35);
+  color: #3c1a28; border-radius: 3px; cursor: pointer;
+  font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+}
+.qty-btn:hover { border-color: #f090b8; }
+#web-qty-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem; color: #e03870;
+  min-width: 22px; text-align: center;
+}
+#web-add-cart-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 0.44rem;
+  background: #58b860; border: 2px solid #2a7830;
+  color: #fff; padding: 10px 12px; border-radius: 4px;
+  cursor: pointer; transition: background 0.15s; width: 100%;
+  margin-top: auto;
+}
+#web-add-cart-btn:hover { background: #6ed876; }
+.sidebar-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.38rem; color: #b06080; margin-bottom: 4px;
+}
+
+/* ── Web Cart tab ── */
+#cart-content { padding: 24px; max-width: 700px; margin: 0 auto; width: 100%; }
+.web-cart-item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 12px 14px;
+  border: 2px solid rgba(240,144,184,0.2);
+  border-radius: 5px; margin-bottom: 8px; background: rgba(255,244,248,0.9);
+}
+.web-cart-info { font-family: 'VT323', monospace; font-size: 1.3rem; color: #3c1a28; flex: 1; }
+.web-cart-info strong { color: #e03870; }
+.web-cart-qty { display: flex; align-items: center; gap: 8px; }
+.web-cart-summary {
+  font-family: 'Press Start 2P', monospace; font-size: 0.5rem; color: #b06080;
+  text-align: right; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid rgba(240,144,184,0.2);
+}
+.web-cart-empty {
+  font-family: 'VT323', monospace; font-size: 1.5rem;
+  color: #c898b0; text-align: center; padding: 40px 0;
+}
+.cart-qty-val {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem; color: #e03870;
+  min-width: 20px; text-align: center;
+}
+.cart-remove-btn {
+  background: none; border: none; color: #e85858;
+  font-size: 1.2rem; cursor: pointer; padding: 4px;
+  opacity: 0.65; transition: opacity 0.15s;
+}
+.cart-remove-btn:hover { opacity: 1; }
+.cart-qty-btn {
+  width: 24px; height: 24px;
+  background: #fff4f8; border: 2px solid rgba(240,144,184,0.35);
+  color: #3c1a28; border-radius: 3px; cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+}
+
+/* ── About tab ── */
+#about-content { padding: 32px 24px; max-width: 720px; margin: 0 auto; }
+.about-npc-row { display: flex; gap: 28px; align-items: flex-start; }
+.about-npc { width: 110px; image-rendering: pixelated; flex-shrink: 0; }
+.about-bubble {
+  background: rgba(255,244,248,0.95); border: 2px solid rgba(240,144,184,0.3);
+  border-radius: 6px; padding: 20px 24px;
+  font-family: 'VT323', monospace; font-size: 1.3rem;
+  color: #3c1a28; line-height: 1.7;
+}
+.about-bubble strong { color: #e03870; }
+.about-bubble p + p { margin-top: 10px; }
+
+/* ── FAQ tab ── */
+#faq-content { padding: 24px; max-width: 700px; margin: 0 auto; }
+.faq-npc-row { display: flex; justify-content: center; margin-bottom: 20px; }
+.faq-npc { width: 100px; image-rendering: pixelated; }
+.faq-list { display: flex; flex-direction: column; gap: 8px; }
+.faq-item {
+  background: rgba(255,244,248,0.95); border: 2px solid rgba(240,144,184,0.22);
+  border-radius: 5px; overflow: hidden; transition: border-color 0.15s;
+}
+.faq-item[open] { border-color: #f090b8; }
+.faq-item summary {
+  font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
+  color: #c04878; padding: 14px 16px; cursor: pointer;
+  list-style: none; display: flex; align-items: center; gap: 10px; line-height: 1.6;
+}
+.faq-item summary::before {
+  content: '▶'; color: #e03870; font-size: 0.48rem;
+  flex-shrink: 0; transition: transform 0.2s;
+}
+.faq-item[open] summary::before { transform: rotate(90deg); }
+.faq-item p {
+  font-family: 'VT323', monospace; font-size: 1.2rem;
+  color: #6a3a50; padding: 0 16px 14px 36px; line-height: 1.5;
+}
+
+/* (Legacy duplicate styles removed — see top of file for current website rules) */

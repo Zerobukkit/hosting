@@ -1,0 +1,402 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* === Welcome Screen === */
+#welcome-screen {
+  background: url('Welcome.gif') no-repeat center center/cover;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#play-button {
+  background-color: #fff;
+  color: #333;
+  border: none;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+#play-button:hover {
+  transform: scale(1.1);
+  background-color: #f0f0f0;
+}
+
+/* === Game Screen === */
+#game-screen {
+  display: none;
+  background-color: #fff;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+#player {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #333;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: border 0.2s ease;
+}
+
+.corner-square {
+  width: 80px;
+  height: 80px;
+  background-color: #444;
+  position: absolute;
+}
+
+/* === Dialogue Box === */
+#dialogue-box {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 220px;
+  background: #f5f5f5;
+  border: 3px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  font-family: 'Verdana', sans-serif;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+#dialogue-box.show { opacity: 1; }
+
+.dialogue-character {
+  width: 120px;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid #ccc;
+}
+.dialogue-character img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+.dialogue-character span {
+  margin-top: 5px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.dialogue-text-container {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#dialogue-text {
+  font-size: 1rem;
+  color: #222;
+  height: 110px;
+  overflow-y: auto;
+}
+.dialogue-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+.dialogue-buttons button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#dialogue-next { background-color: #88c43f; color: #fff; }
+#dialogue-end, #dialogue-no { background-color: #ff5959; color: #fff; }
+#dialogue-yes { background-color: #2e89ff; color: #fff; }
+#dialogue-next:hover,
+#dialogue-yes:hover,
+#dialogue-no:hover,
+#dialogue-end:hover { opacity: 0.85; }
+
+/* === Popup Fade === */
+#popup {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+#popup.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* === Popup Shared === */
+#popup.shop-popup {
+  width: 40%;
+  height: 70%;
+  flex-direction: column;
+  background: linear-gradient(to bottom, #f5f5f5, #ddd);
+  border: 3px solid #999;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 300;
+}
+
+/* === Popup Header === */
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  border-bottom: 2px solid #ccc;
+  padding: 6px 10px;
+  height: 60px;
+}
+.popup-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.popup-npc-frame {
+  background: #ddd;
+  border: 2px solid #aaa;
+  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.popup-npc-frame img {
+  width: 46px;
+  height: 46px;
+  border-radius: 6px;
+}
+.popup-header-title {
+  font-weight: bold;
+  color: #333;
+  text-shadow: 1px 1px #fff;
+  font-size: 1.1rem;
+}
+.popup-exit-btn {
+  background: linear-gradient(to bottom, #a5c9f7, #5087d6);
+  color: white;
+  border: 2px solid #6b8ec4;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.popup-exit-btn:hover {
+  background: linear-gradient(to bottom, #91b8eb, #3e73c6);
+}
+
+/* === Popup Content === */
+.popup-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 60px);
+}
+
+/* === Shop Specific Panels === */
+.shop-main {
+  width: 60%;
+  height: 100%;
+  background: #e0e0e0;
+  border-right: 2px solid #aaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.shop-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.shop-item {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, #fff, #dcdcdc);
+  border: 2px solid #bcbcbc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.shop-item:hover { transform: scale(1.02); }
+.shop-item img {
+  width: 40px; height: 40px;
+  margin: 8px;
+  border-radius: 4px;
+  border: 1px solid #999;
+  background-color: #f9f9f9;
+}
+.shop-item span { font-weight: bold; color: #333; }
+
+.shop-right {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.shop-panel {
+  flex: 1;
+  background: #f3f3f3;
+  border-left: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  padding: 10px;
+  overflow-y: auto;
+}
+.shop-panel h2 {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+  text-shadow: 1px 1px #fff;
+}
+/* Make right-side item list scrollable */
+.shop-items {
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* === Sizing Chart Buttons & Controls === */
+.sizing-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.size-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.size-button {
+  background: linear-gradient(to bottom, #fff, #dcdcdc);
+  border: 2px solid #aaa;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.size-button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(to bottom, #f9f9f9, #cfcfcf);
+}
+.size-button.active {
+  background: linear-gradient(to bottom, #ffe066, #f1c232);
+  border-color: #b38f3b;
+  color: #3c2e1e;
+}
+
+.bottom-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #aaa;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #f0f0f0, #ccc);
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.qty-btn:hover {
+  background: linear-gradient(to bottom, #e6e6e6, #bbb);
+}
+.qty-value {
+  width: 28px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(to bottom, #a5c9f7, #5087d6);
+  border: 2px solid #6b8ec4;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.add-to-cart-btn:hover {
+  background: linear-gradient(to bottom, #91b8eb, #3e73c6);
+}
+/* === Add to Cart Glow === */
+.glow-ready {
+  animation: glowPulse 1.5s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 5px 2px rgba(255, 220, 100, 0.6); }
+  50% { box-shadow: 0 0 10px 4px rgba(255, 230, 150, 0.9); }
+}
+
+/* === Floating +1 Text Animation === */
+@keyframes floatUp {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -150%) scale(1.2); opacity: 0; }
+}
+
+/* === Green "View Cart" Button === */
+.popup-cart-btn {
+  background: linear-gradient(to bottom, #8df28d, #4aa64a);
+  border: 2px solid #2b752b;
+  color: #fff;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s ease;
+}
+
+.popup-cart-btn:hover {
+  background: linear-gradient(to bottom, #a2f7a2, #5cc55c);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+}
